@@ -21,18 +21,28 @@ namespace Combiner.Lucene
     public static class LuceneService
     {
         const LuceneVersion luceneVersion = LuceneVersion.LUCENE_30;
-        const int MAX_RESULTS = 1000;
+        const int MAX_RESULTS = 100;
 
         private static List<PropertyInfo> creatureFields = null;
 
         public static void LoadAll()
         {
             var db = new Database();
-            var mod = db.GetAllMods().First();
+
+            foreach (var mod in db.GetAllMods())
+            {
+                LoadModIndex(mod);
+            }
+        }
+
+        public static void LoadModIndex(ModCollection mod)
+        {
+            var db = new Database();
+
             var allCreatures = db.GetAllCreatures(mod);
 
             //Open the Directory using a Lucene Directory class
-            string indexName = "example_index";
+            string indexName = "index_" + mod.CollectionName;
             string indexPath = Path.Combine(Environment.CurrentDirectory, indexName);
             const LuceneVersion luceneVersion = LuceneVersion.LUCENE_30;
             using (LuceneDirectory indexDir = FSDirectory.Open(indexPath))
@@ -95,7 +105,7 @@ namespace Combiner.Lucene
             Document doc = new Document();
             foreach(var field in GetFields())
             {
-                // Handle the dictionaries
+                // Handle the dictionaries. TODO: Convert to a list format
                 if (field.PropertyType.IsGenericType)
                 {
                     var serialized = JsonConvert.SerializeObject(field.GetValue(creature));
@@ -126,9 +136,9 @@ namespace Combiner.Lucene
             writer.AddDocument(doc);
         }
 
-        public static List<Creature> Query(Query q)
+        public static List<Creature> Query(Query q, ModCollection activeCollection)
         {
-            string indexName = "example_index";
+            string indexName = "index_" + activeCollection.CollectionName;
             string indexPath = Path.Combine(Environment.CurrentDirectory, indexName);
             using (LuceneDirectory indexDir = FSDirectory.Open(indexPath))
             {
@@ -143,5 +153,24 @@ namespace Combiner.Lucene
             }
         }
 
+        public static Query HasDoubleValue(string fieldName)
+        {
+            return NumericRangeQuery.NewDoubleRange(fieldName, 0, null, false, true);
+        }
+        
+        public static Query HasNoDoubleValue(string fieldName)
+        {
+            return NumericRangeQuery.NewDoubleRange(fieldName, 0, 0, true, true);
+        }
+        
+        public static Query HasIntValue(string fieldName, int val)
+        {
+            return NumericRangeQuery.NewDoubleRange(fieldName, val, val, true, true);
+        }
+
+        public static Query HasBoolValue(string fieldName, bool compareVal)
+        {
+            return new TermQuery(new Term(fieldName, compareVal ? "true" : "false"));
+        }
     }
 }

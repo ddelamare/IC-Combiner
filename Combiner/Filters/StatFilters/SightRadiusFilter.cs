@@ -9,7 +9,7 @@ namespace Combiner
 	public class SightRadiusFilter : StatFilter
 	{
 		public SightRadiusFilter()
-			: base("Sight Radius", 0, 50) { }
+			: base("Sight Radius", "SightRadius", 0, 50) { }
 
 		public override bool Filter(Creature creature)
 		{

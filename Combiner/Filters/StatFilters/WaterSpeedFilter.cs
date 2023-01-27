@@ -9,7 +9,7 @@ namespace Combiner
 	public class WaterSpeedFilter : StatFilter
 	{
 		public WaterSpeedFilter()
-			: base("Water Speed", 0, 50) { }
+			: base("Water Speed", "WaterSpeed", 0, 50) { }
 
 		public override bool Filter(Creature creature)
 		{

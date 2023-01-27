@@ -1,4 +1,5 @@
-﻿using LiteDB;
+﻿using Combiner.Lucene;
+using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,11 @@ namespace Combiner
 		public override BsonExpression BuildQuery()
 		{
 			return Query.EQ("RangeDamage1", 0);
+		}
+
+		public override global::Lucene.Net.Search.Query BuildLuceneQuery()
+		{
+			return LuceneService.HasNoDoubleValue("RangeDamage1");
 		}
 
 		public override string ToString()

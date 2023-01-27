@@ -9,7 +9,7 @@ namespace Combiner
 	public class PowerFilter : StatFilter
 	{
 		public PowerFilter()
-			: base("Power", 0, 10000) { }
+			: base("Power", "Power", 0, 10000) { }
 
 		public override bool Filter(Creature creature)
 		{

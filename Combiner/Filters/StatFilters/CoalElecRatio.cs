@@ -9,7 +9,7 @@ namespace Combiner
 	public class CoalElecRatioFilter : StatFilter
 	{
 		public CoalElecRatioFilter()
-			: base("Coal/Elec Ratio", 0, 1000) { }
+			: base("Coal/Elec Ratio", "CoalElecRatio", 0, 1000) { }
 
 		public override bool Filter(Creature creature)
 		{

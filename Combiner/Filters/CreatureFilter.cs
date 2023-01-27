@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using Lucene.Net.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Combiner
 
 		public virtual BsonExpression BuildQuery()
 		{
-			return Query.All().Select;
+			return LiteDB.Query.All().Select;
 		}
 
 		public string Name { get; private set; }
@@ -45,6 +46,11 @@ namespace Combiner
 		public CreatureFilter(string name)
 		{
 			Name = name;
+		}
+
+		public virtual global::Lucene.Net.Search.Query BuildLuceneQuery()
+		{
+			return new MatchAllDocsQuery();
 		}
 	}
 

@@ -9,7 +9,7 @@ namespace Combiner
 	public class NERatingFilter : StatFilter
 	{
 		public NERatingFilter()
-			: base("N-Eff Rating", 0, 20000) { }
+			: base("N-Eff Rating", "NERating", 0, 20000) { }
 
 		public override bool Filter(Creature creature)
 		{

@@ -1,8 +1,11 @@
-﻿using LiteDB;
+﻿using Combiner.Lucene;
+using LiteDB;
+using Lucene.Net.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Query = LiteDB.Query;
 
 namespace Combiner
 {
@@ -36,6 +39,26 @@ namespace Combiner
 				Query.Not("RangeType2", (int)DamageType.Sonic));
 
 			return Query.Or(range1HasDirectQuery, range2HasDirectQuery);
+		}
+
+		public override global::Lucene.Net.Search.Query BuildLuceneQuery()
+		{
+			var bq = new BooleanQuery();
+			var range1HasDirectQuery = new BooleanQuery();
+			var range2HasDirectQuery = new BooleanQuery();
+
+			range1HasDirectQuery.Add(LuceneService.HasDoubleValue("RangeDamage1"), Occur.MUST);
+			range1HasDirectQuery.Add(LuceneService.HasNoDoubleValue("RangeSpecial1"), Occur.MUST);
+			range1HasDirectQuery.Add(LuceneService.HasIntValue("RangeType1", (int)DamageType.Sonic), Occur.MUST_NOT);
+						
+			range2HasDirectQuery.Add(LuceneService.HasDoubleValue("RangeDamage2"), Occur.MUST);
+			range2HasDirectQuery.Add(LuceneService.HasNoDoubleValue("RangeSpecial2"), Occur.MUST);
+			range2HasDirectQuery.Add(LuceneService.HasIntValue("RangeType2", (int)DamageType.Sonic), Occur.MUST_NOT);
+
+			bq.Add(range1HasDirectQuery, Occur.SHOULD);
+			bq.Add(range2HasDirectQuery, Occur.SHOULD);
+
+			return bq;
 		}
 
 		public override string ToString()

@@ -9,7 +9,7 @@ namespace Combiner
 	public class MeleeDamageFilter : StatFilter
 	{
 		public MeleeDamageFilter()
-			: base("Melee Damage", 0, 100) { }
+			: base("Melee Damage", "MeleeDamage", 0, 100) { }
 
 		public override bool Filter(Creature creature)
 		{

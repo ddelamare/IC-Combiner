@@ -9,7 +9,7 @@ namespace Combiner
 	public class CoalFilter : StatFilter
 	{
 		public CoalFilter()
-			: base("Coal", 0, 2000) { }
+			: base("Coal", "Coal", 0, 2000) { }
 
 		public override bool Filter(Creature creature)
 		{

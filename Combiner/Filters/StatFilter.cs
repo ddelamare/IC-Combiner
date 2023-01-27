@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Combiner.Lucene;
+using Lucene.Net.Search;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,15 +12,17 @@ namespace Combiner
 	/// </summary>
 	public abstract class StatFilter : CreatureFilter
 	{
-		public StatFilter(string name, double minDefaultValue, double maxDefaultValue)
+		public StatFilter(string name, string statName, double minDefaultValue, double maxDefaultValue)
 			: base(name)
 		{
 			m_MinDefaultValue = minDefaultValue;
 			m_MaxDefaultValue = maxDefaultValue;
 			MinValue = minDefaultValue;
 			MaxValue = maxDefaultValue;
+			m_StatName = statName;
 		}
 
+		protected string m_StatName;
 		private double m_MinDefaultValue;
 		private double m_MaxDefaultValue;
 
@@ -126,6 +130,11 @@ namespace Combiner
 			MinValue = m_MinDefaultValue;
 			MaxValue = m_MaxDefaultValue;
 		
+		}
+
+		public override global::Lucene.Net.Search.Query BuildLuceneQuery()
+		{
+			return NumericRangeQuery.NewDoubleRange(m_StatName, MinValue, MaxValue + 1, true, false);
 		}
 
 	}

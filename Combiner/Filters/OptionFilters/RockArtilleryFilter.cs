@@ -1,8 +1,11 @@
-﻿using LiteDB;
+﻿using Combiner.Lucene;
+using LiteDB;
+using Lucene.Net.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Query = LiteDB.Query;
 
 namespace Combiner
 {
@@ -21,6 +24,16 @@ namespace Combiner
 			return Query.Or(
 				Query.EQ("RangeSpecial1", 1),
 				Query.EQ("RangeSpecial2", 1));
+		}
+
+		public override global::Lucene.Net.Search.Query BuildLuceneQuery()
+		{
+			var bq = new BooleanQuery();
+
+			bq.Add(LuceneService.HasIntValue("RangeSpecial1", 1), Occur.SHOULD);
+			bq.Add(LuceneService.HasIntValue("RangeSpecial1", 1), Occur.SHOULD);
+
+			return bq;
 		}
 
 		public override string ToString()

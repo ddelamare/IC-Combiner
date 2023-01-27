@@ -31,37 +31,20 @@ namespace Combiner.Tests.Tests
         }
 
         [TestMethod]
-        public void TryIndex()
-        {
-            string indexName = "example_index";
-            string indexPath = Path.Combine(Environment.CurrentDirectory, indexName);
-
-            using (LuceneDirectory indexDir = FSDirectory.Open(indexPath))
-            {
-                IndexSearcher searcher = new IndexSearcher(indexDir);
-                Query query = new TermQuery(new Term("Rank", "3"));
-                TopDocs topDocs = searcher.Search(query, n: 1000);
-                var docs = new List<Document>();
-                foreach (var doc in topDocs.ScoreDocs)
-                {
-                    docs.Add(searcher.Doc(doc.Doc));
-                }
-            }
-        }
-
-
-
-        [TestMethod]
         public void TryLuceneService()
         {
+            var db = new Database();
+            var mod = db.GetAllMods().First();
             Query query = NumericRangeQuery.NewIntRange("Rank", 3, 3, true, true);
 
-            var vals = LuceneService.Query(query);
+            var vals = LuceneService.Query(query, mod);
         }
 
         [TestMethod]
         public void TestMultiTermQuery()
         {
+            var db = new Database();
+            var mod = db.GetAllMods().First();
             var bq = new BooleanQuery();
             var bq2 = new BooleanQuery();
             Query query = NumericRangeQuery.NewIntRange("Rank", 3, 3, true, true);
@@ -72,10 +55,10 @@ namespace Combiner.Tests.Tests
 
             bq2.Add(query, Occur.MUST);
 
-            var v1 = LuceneService.Query(bq);
-            var v2 = LuceneService.Query(query);
-            var v3 = LuceneService.Query(bq2);
-            var vals = LuceneService.Query(query2);
+            var v1 = LuceneService.Query(bq, mod);
+            var v2 = LuceneService.Query(query, mod);
+            var v3 = LuceneService.Query(bq2, mod);
+            var vals = LuceneService.Query(query2, mod);
         }
     }
 }

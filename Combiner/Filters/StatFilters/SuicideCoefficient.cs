@@ -9,7 +9,7 @@ namespace Combiner
 	public class SuicideCoefficientFilter : StatFilter
 	{
 		public SuicideCoefficientFilter()
-			: base("SuiCo", 0, 10000) { }
+			: base("SuiCo", "SuicideCoefficient", 0, 10000) { }
 
 		public override bool Filter(Creature creature)
 		{

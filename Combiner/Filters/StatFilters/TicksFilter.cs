@@ -9,7 +9,7 @@ namespace Combiner
 	public class TicksFilter : StatFilter
 	{
 		public TicksFilter()
-			: base("Build Time", 0, 1000) { }
+			: base("Build Time", "Ticks", 0, 1000) { }
 
 		public override bool Filter(Creature creature)
 		{

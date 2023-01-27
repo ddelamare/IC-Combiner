@@ -1,8 +1,12 @@
-﻿using LiteDB;
+﻿using Combiner.Lucene;
+using LiteDB;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Query = LiteDB.Query;
 
 namespace Combiner
 {
@@ -25,6 +29,15 @@ namespace Combiner
 				Query.EQ("AirSpeed", 0),
 				Query.GT("WaterSpeed", 0));
 
+		}
+
+		public override global::Lucene.Net.Search.Query BuildLuceneQuery()
+		{
+			var bq = new BooleanQuery();
+			bq.Add(LuceneService.HasDoubleValue("LandSpeed"), Occur.MUST);
+			bq.Add(LuceneService.HasDoubleValue("WaterSpeed"), Occur.MUST);
+			bq.Add(LuceneService.HasNoDoubleValue("AirSpeed"), Occur.MUST);
+			return bq;
 		}
 
 		public override string ToString()

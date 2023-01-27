@@ -1,4 +1,5 @@
-﻿using LiteDB;
+﻿using Combiner.Lucene;
+using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,10 @@ namespace Combiner
 			return Query.EQ("HasHorns", true);
 		}
 
+		public override global::Lucene.Net.Search.Query BuildLuceneQuery()
+		{
+			return LuceneService.HasBoolValue("HasHorns", true);
+		}
 		public override string ToString()
 		{
 			return nameof(HornsFilter);

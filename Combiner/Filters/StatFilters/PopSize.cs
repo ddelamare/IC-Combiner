@@ -9,7 +9,7 @@ namespace Combiner
 	public class PopSizeFilter : StatFilter
 	{
 		public PopSizeFilter()
-			: base("PopSize", 0, 10000) { }
+			: base("PopSize", "PopSize", 0, 10000) { }
 
 		public override bool Filter(Creature creature)
 		{

@@ -1,4 +1,6 @@
-﻿using LiteDB;
+﻿using Combiner.Lucene;
+using LiteDB;
+using Lucene.Net.Search;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using LuceneQuery = Lucene.Net.Search.Query;
 
 namespace Combiner
 {
@@ -200,10 +203,9 @@ namespace Combiner
 			}
 			else if (IsQueryFilteringSelected)
 			{
-				m_CreatureDataVM.Creatures = 
+				m_CreatureDataVM.Creatures =
 					new ObservableCollection<Creature>(
-						m_Database.GetCreatureQuery(
-							BuildFilterQuery(), 
+						LuceneService.Query(BuildLuceneQuery(),
 							m_DatabaseManagerVM.ActiveCollection));
 			}
 			else
@@ -215,6 +217,27 @@ namespace Combiner
 			}
 			//});
 			//m_ProgressVM.EndWork();
+		}
+
+		private LuceneQuery BuildLuceneQuery()
+		{
+			if (m_ActiveFilters.Count == 0)
+			{
+				return new MatchAllDocsQuery();
+			}
+
+			if (m_ActiveFilters.Count == 1)
+			{
+				return m_ActiveFilters.First().BuildLuceneQuery();
+			}
+
+			IEnumerable<LuceneQuery> queries = m_ActiveFilters.Select(x => x.BuildLuceneQuery());
+			var bQuery = new BooleanQuery();
+			foreach( var q in queries)
+			{
+				bQuery.Add(q, Occur.MUST);
+			}
+			return bQuery;
 		}
 
 		private void UpdateCollection(ModCollection collectionName)
@@ -265,7 +288,7 @@ namespace Combiner
 		{
 			if (m_ActiveFilters.Count == 0)
 			{
-				return Query.All().Select;
+				return LiteDB.Query.All().Select;
 			}
 
 			if (m_ActiveFilters.Count == 1)
@@ -274,7 +297,7 @@ namespace Combiner
 			}
 
 			IEnumerable<BsonExpression> queries = m_ActiveFilters.Select(x => x.BuildQuery());
-			return Query.And(queries.ToArray());
+			return LiteDB.Query.And(queries.ToArray());
 		}
 
 		#region Filters

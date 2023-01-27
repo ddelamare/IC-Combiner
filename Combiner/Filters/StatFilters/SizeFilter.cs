@@ -9,7 +9,7 @@ namespace Combiner
 	public class SizeFilter : StatFilter
 	{
 		public SizeFilter()
-			: base("Size", 0, 10) { }
+			: base("Size", "Size", 0, 10) { }
 
 		public override bool Filter(Creature creature)
 		{

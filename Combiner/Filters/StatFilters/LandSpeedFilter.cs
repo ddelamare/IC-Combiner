@@ -9,7 +9,7 @@ namespace Combiner
 	public class LandSpeedFilter : StatFilter
 	{
 		public LandSpeedFilter()
-			: base("Land Speed", 0, 50) { }
+			: base("Land Speed", "LandSpeed", 0, 50) { }
 
 		public override bool Filter(Creature creature)
 		{
