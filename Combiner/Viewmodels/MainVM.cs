@@ -200,7 +200,7 @@ namespace Combiner
 			ProgressVM = new ProgressVM();
 			DatabaseManagerVM = new DatabaseManagerVM(database, importExportHandler);
 			ModManagerVM = new ModManagerVM(database, ProgressVM);
-			CreatureDataVM = new CreatureDataVM(database, DatabaseManagerVM);
+			CreatureDataVM = new CreatureDataVM(this, database, DatabaseManagerVM);
 			CsvWriterVM = new CsvWriterVM(CreatureDataVM, creatureCsvWriter);
 			FiltersVM = new FiltersVM(CreatureDataVM, ProgressVM, database, DatabaseManagerVM);
 			SelectedCreatureVM = new SelectedCreatureVM(CreatureDataVM);

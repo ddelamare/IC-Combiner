@@ -17,8 +17,9 @@ namespace Combiner
 		private Database m_Database;
 		private DatabaseManagerVM m_DatabaseManagerVM;
 
-		public CreatureDataVM(Database database, DatabaseManagerVM databaseManagerVM)
+		public CreatureDataVM(MainVM parent, Database database, DatabaseManagerVM databaseManagerVM)
 		{
+			Parent = parent;
 			m_Database = database;
 			m_DatabaseManagerVM = databaseManagerVM;
 			m_DatabaseManagerVM.CollectionChangedEvent += UpdateTotalCreatureCount;
@@ -168,6 +169,9 @@ namespace Combiner
 				}
 			}
 		}
+
+		public MainVM Parent { get; }
+
 		public void UnSaveCreature(object obj)
 		{
 			if (SelectedCreature != null)

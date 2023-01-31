@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using static Lucene.Net.Index.IndexWriter;
+using System.ComponentModel;
 
 namespace Combiner.Lucene
 {
@@ -136,14 +137,25 @@ namespace Combiner.Lucene
             writer.AddDocument(doc);
         }
 
-        public static List<Creature> Query(Query q, ModCollection activeCollection)
+        public static List<Creature> Query(Query q, ModCollection activeCollection, string sort = null, ListSortDirection? direction = ListSortDirection.Ascending)
         {
             string indexName = "index_" + activeCollection.CollectionName;
             string indexPath = Path.Combine(Environment.CurrentDirectory, indexName);
             using (LuceneDirectory indexDir = FSDirectory.Open(indexPath))
             {
                 IndexSearcher searcher = new IndexSearcher(indexDir);
-                TopDocs topDocs = searcher.Search(q, n: MAX_RESULTS);
+                TopDocs topDocs;
+                if (sort != null)
+                {
+                    var sortObj = new Sort(new SortField(sort, SortField.STRING_VAL, direction == ListSortDirection.Descending));
+
+                    var filter = new QueryWrapperFilter(q);
+                    topDocs = searcher.Search(q, filter, n: MAX_RESULTS, sort: sortObj);
+                }
+                else
+                {
+                    topDocs = searcher.Search(q, n: MAX_RESULTS);
+                }
                 var docs = new List<Creature>();
                 foreach (var doc in topDocs.ScoreDocs)
                 {

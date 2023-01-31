@@ -20,7 +20,8 @@
 					  AlternationCount="2"
 					  AutoGenerateColumns="False" 
 					  VirtualizingStackPanel.VirtualizationMode="Standard"
-					  EnableRowVirtualization="True"                       
+					  EnableRowVirtualization="True"   
+					  Sorting="DataGrid_Sorting"
 					 IsReadOnly="True" EnableColumnVirtualization="True">
         <DataGrid.ContextMenu>
 			<ContextMenu>

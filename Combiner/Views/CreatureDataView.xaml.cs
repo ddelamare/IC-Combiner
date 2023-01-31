@@ -28,5 +28,18 @@ namespace Combiner
 		{
 
 		}
+
+		private void DataGrid_Sorting(object sender, DataGridSortingEventArgs e)
+		{
+			var member = e.Column.SortMemberPath;
+			var direction = e.Column.SortDirection;
+
+			var dg = sender as DataGrid;
+			var creatureView = dg.DataContext as CreatureDataVM;
+			
+
+			creatureView.Parent.FiltersVM.Sort(member, direction);
+			e.Handled = true;
+		}
 	}
 }
